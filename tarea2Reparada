@@ -1,0 +1,109 @@
+class Libro: #Creamos la clase libro
+    def __init__(self, nombre, autor):
+        self.nombre = nombre
+        self.autor = autor
+        self.fechaDevolucion = None
+        self.LibroPrestado = False
+
+    def devolverLibro(self):
+        self.LibroPrestado = False
+        self.fechaDevolucion = None
+        print(f'El libro "{self.nombre}" del autor {self.autor}, fue devuelto')
+
+    def __str__(self):
+        estado = "No disponible (Prestado)" if self.LibroPrestado else "Disponible"
+        return f'El libro: "{self.nombre}" del autor {self.autor}, se encuentra: {estado}.'
+
+    def prestarLibro(self, fechaDev):
+        self.LibroPrestado = True
+        self.fechaDevolucion = fechaDev
+        print(f'El libro "{self.nombre}" del autor {self.autor}, fue prestado hasta la fecha {self.fechaDevolucion}')
+
+class Lector: #Creamos la clase lector 
+    def __init__(self, id, nombreCompleto, fecha_nac):
+        self.__Carnet = id
+        self.__NombreCom = nombreCompleto
+        self.__fecha_nac = fecha_nac
+        self.__librosPrestados = []
+
+    def libroDevuelto(self, libro):
+        if libro in self.__librosPrestados:
+            libro.devolverLibro()
+            self.__librosPrestados.remove(libro)
+        else:
+            print(f'El libro "{libro.nombre}" del autor {libro.autor}, no esta prestado por el cliente.')
+
+    def libroPrestado(self, libro, fechaDev):
+        if not libro.LibroPrestado:
+            libro.prestarLibro(fechaDev)
+            self.__librosPrestados.append(libro)
+        else:
+            print(f'El libro "{libro.nombre}" del autor {libro.autor} ya está prestado.')
+
+
+    def verificarLibros(self):
+        if self.__librosPrestados:
+            print(f'Los libros prestados por el cliente {self.__NombreCom}:')
+            for libro in self.__librosPrestados:
+                print(f'/ {libro.nombre}/')
+        else:
+            print(f'El usuario {self.__NombreCom} no posee libros prestados.')
+
+    def __str__(self):
+        return f'Lector: {self.__NombreCom}, ID: {self.__Carnet}, fecha de nacimiento: {self.__fecha_nac}'
+    
+
+
+class Libreria: #Creamos la clase libreria 
+
+    print("*********LIBRERIA********")
+    def __init__(self, selecciones, direccion):
+        self.__selecciones = selecciones
+        self.__direccion = direccion
+        self.__catalogo = []
+    def addLibro(self, libro):
+        self.__catalogo.append(libro)
+        print(f'- Libro agregado correctamente: "{libro.nombre}", del autor {libro.autor}')
+    
+    def __str__(self) -> str:
+        return f'La librería se encuentra en: {self.__direccion}'
+
+
+
+
+
+# Crear la librería
+print("Bienvenido a la libreria INGENIERIA")
+
+mi_libreria = Libreria(["Cristiano", "Psicologia", "Tecnlogia", "Terror"], "1ra Calle B 30-20 zona 3")
+# Consultar la información de la librería
+print(mi_libreria)
+# Creamos algunos libros
+libro1 = Libro("Un mundo feliz", "Aldous Huxley")
+libro2 = Libro("Crimen y Castigo", "Fiódor Dostoyevski")
+libro3 = Libro("Biblia", "Escuela biblica belen")
+libro4 = Libro("1984", "George Orwell")
+libro5 = Libro("Matar a un ruiseñor", "Harper Lee")
+
+# Registramos un lector
+print("************LECTOR*************")
+lector = Lector("153825", "Matthew FLores", "31/10/2004")
+print(lector)
+print("\n")
+# Agregar libros al catálogo
+print("*****LIBROS AGREGADOS*****")
+mi_libreria.addLibro(libro1)
+mi_libreria.addLibro(libro2)
+mi_libreria.addLibro(libro3)
+mi_libreria.addLibro(libro4)
+mi_libreria.addLibro(libro5)
+
+
+# El lector presta un libro
+lector.libroPrestado(libro1, "09/09/24")
+lector.libroPrestado(libro3, "11/08/24")
+lector.verificarLibros()
+
+# El lector devuelve el libro
+lector.libroDevuelto(libro4)
+lector.verificarLibros()
